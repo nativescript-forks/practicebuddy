@@ -1,6 +1,6 @@
 import { NativeScriptModule } from "nativescript-angular/nativescript.module";
 import { NativeScriptFormsModule } from "nativescript-angular/forms";
-import { NgModule } from "@angular/core";
+import { NgModule, NO_ERRORS_SCHEMA } from "@angular/core";
 
 import { loginRouting } from "./login.routes";
 import { LoginComponent } from "./login.component";
@@ -13,6 +13,9 @@ import { LoginComponent } from "./login.component";
   ],
   declarations: [
     LoginComponent
+  ],
+  schemas: [
+    NO_ERRORS_SCHEMA
   ]
 })
 export class LoginModule { }

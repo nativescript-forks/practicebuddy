@@ -152,7 +152,7 @@ deleteStudent(id:string){
 
 }
 
-  toggleRecord(args) {
+  toggleRecord(args?) {
     if (!this.isTiming) {
         TNSFancyAlert.showError('Oops!', "Please start your practice session timer before starting to record.", 'OK!');
       }

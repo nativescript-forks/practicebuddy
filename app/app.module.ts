@@ -1,5 +1,5 @@
 import { NativeScriptModule } from "nativescript-angular/nativescript.module";
-import { NgModule } from "@angular/core";
+import { NgModule, NO_ERRORS_SCHEMA } from "@angular/core";
 import { NativeScriptAnimationsModule } from "nativescript-angular/animations";
 import { NativeScriptHttpModule } from "nativescript-angular/http";
 import { NativeScriptRouterModule } from "nativescript-angular/router";
@@ -20,6 +20,36 @@ import { TeacherStudentArchiveModule } from "./teacher-student-archive/teacher-s
 
 import { StickerGalleryModule } from "./sticker-gallery/sticker-gallery.module";
 
+import { uptime, time } from "tns-core-modules/profiling";
+const dialogs = require("ui/dialogs");
+import firebase = require("nativescript-plugin-firebase");
+import application = require("application");
+
+application.on("displayed", () => {
+  var now = time();
+  var started = now - uptime();
+  console.log("Timeline: Startup time...  (" + started + "ms. - " + now + "ms.)");
+});
+
+ firebase.init({
+   persist: false,
+   storageBucket: 'gs://practicebuddy-4d466.appspot.com',
+   onAuthStateChanged: (data: any) => {     
+     if (data.loggedIn) {
+       BackendService.token = data.user.uid;
+     }
+     else {
+       BackendService.token = "";
+     }
+   }
+ }).then(
+     function (instance) {
+       console.log("firebase.init done");
+     },
+     function (error) {
+       console.log("firebase.init error: " + error);
+     }
+ );
 
 @NgModule({
   providers: [
@@ -47,6 +77,9 @@ import { StickerGalleryModule } from "./sticker-gallery/sticker-gallery.module";
   declarations: [
       AppComponent,
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  schemas: [
+    NO_ERRORS_SCHEMA
+  ]
 })
 export class AppModule { }
