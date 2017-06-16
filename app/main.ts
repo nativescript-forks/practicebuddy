@@ -4,4 +4,4 @@ import {registerElement} from "nativescript-angular/element-registry";
 import { AppModule } from "./app.module";
 
 //registerElement("PlayPause", () => require("nativescript-play-pause-button").PlayPauseButton);
-platformNativeScriptDynamic().bootstrapModule(AppModule);
+platformNativeScriptDynamic({ startPageActionBarHidden: false }).bootstrapModule(AppModule);
