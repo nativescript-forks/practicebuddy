@@ -1,0 +1,45 @@
+{
+  "project_info": {
+    "project_number": "858571045381",
+    "firebase_url": "https://practicebuddy-4d466.firebaseio.com",
+    "project_id": "practicebuddy-4d466",
+    "storage_bucket": "practicebuddy-4d466.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:858571045381:android:eaaa9fd82456da29",
+        "android_client_info": {
+          "package_name": "com.ladeezfirstmedia.practicebuddy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "858571045381-3ju8dodl7aklb13tvdt2jom095n3b5ri.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCCEuPMbGvMlrj7ySYn5hs8z99maweyeEY"
+        },
+        {
+          "current_key": "AIzaSyBTXDRA7Ct5pPOV64lSbGrShrzdQclZYPs"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

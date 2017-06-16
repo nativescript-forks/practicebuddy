@@ -7,6 +7,9 @@
     "id": "com.ladeezfirstmedia.quicknoms",
     "tns-ios": {
       "version": "3.0.1"
+    },
+    "tns-android": {
+      "version": "3.0.1"
     }
   },
   "dependencies": {
