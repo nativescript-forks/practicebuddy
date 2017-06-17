@@ -176,6 +176,7 @@ export class StudentAdminComponent implements OnInit, AfterViewInit {
      this.firebaseService.saveSettings(this.newstudent)
       .then(() => {
         TNSFancyAlert.showSuccess('Saved!', 'Student info saved!', 'OK!');
+        this._router.navigate([""]);
       })
       .catch(function (e: any) {
         console.log(e.message);

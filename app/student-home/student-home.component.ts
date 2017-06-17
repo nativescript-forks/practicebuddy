@@ -68,6 +68,7 @@ export class StudentHomeComponent implements OnInit, OnDestroy {
   //timer
   public minutes$: BehaviorSubject<number> = new BehaviorSubject(0);
   public seconds$: BehaviorSubject<number> = new BehaviorSubject(0);
+  public reward$: BehaviorSubject<string> = new BehaviorSubject("You're working towards a special prize!");
 
   loader = new LoadingIndicator();
   
@@ -83,9 +84,7 @@ export class StudentHomeComponent implements OnInit, OnDestroy {
     this.recorderOptions = this.recorder.AudioRecorderOptions; 
   }
 
-  
-
-  ngOnInit() {
+  ngOnInit() {    
       this.sub = this.route.params.subscribe((params: any) => {
         this.id = params['id'];
         this.firebaseService.getMyStudent(this.id).subscribe((student) => {
@@ -108,7 +107,7 @@ export class StudentHomeComponent implements OnInit, OnDestroy {
                 this.practicelength = student[prop];
               }
               if (prop === "Reward") {
-                this.reward = student[prop];
+                this.reward = "You're working towards " + student[prop];
               }
               if (prop === "Instrument") {
                 this.instrument = student[prop];

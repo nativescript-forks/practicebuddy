@@ -12,10 +12,10 @@
             <Button col="1" [text]="'fa-history' | fonticon" class="fa btn blue" (tap)="goToHistory(id)"></Button>
             <Button col="2" [text]="'fa-trash' | fonticon" class="fa btn blue" (tap)="deleteStudent(id)"></Button>
         </GridLayout>
-
+        
         <Label textWrap="true" horizontalAlignment="center" class="header" text="You have completed {{practicescompleted}} out of {{practicesrequired}} required practices."></Label>
         <Image src="~/images/{{instrument}}.png" height="50"></Image>
-        <Label horizontalAlignment="center" textWrap="true" text="You're working towards: {{reward}}"></Label>
+        <Label horizontalAlignment="center" textWrap="true" [text]="reward"></Label>
         <Label horizontalAlignment="center" text="You're scheduled to practice for {{practicelength}} minutes."></Label>
 
         <GridLayout horizontalAlignment="center" columns="auto,auto,auto" rows="*">
