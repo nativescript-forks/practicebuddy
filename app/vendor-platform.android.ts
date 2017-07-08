@@ -1,3 +1,5 @@
 require("application");
-require("ui/frame");
-require("ui/frame/activity");
+if (!(<any>global).__snapshot) {
+    require("ui/frame");
+    require("ui/frame/activity");
+}

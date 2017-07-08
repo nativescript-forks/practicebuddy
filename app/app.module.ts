@@ -27,6 +27,7 @@ import application = require("application");
 
 application.on("displayed", () => {
   var now = time();
+  var uptime = global.android ? (<any>global).org.nativescript.Process.getUpTime : (<any>global).__tns_uptime;
   var started = now - uptime();
   console.log("Timeline: Startup time...  (" + started + "ms. - " + now + "ms.)");
 });
