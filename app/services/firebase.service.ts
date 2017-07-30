@@ -47,8 +47,10 @@ export class FirebaseService {
     this.loader.show({ message: 'Logging in...' });
     return firebase.login({
       type: firebase.LoginType.PASSWORD,
-      email: user.email,
-      password: user.password
+      passwordOptions: {
+        email: user.email,
+        password: user.password
+      }
     }).then((result: any) => {
       this.loader.hide();
       BackendService.token = result.uid;

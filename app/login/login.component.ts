@@ -4,6 +4,7 @@ import {UserModel} from '../models/user.model';
 import {FirebaseService} from '../services';
 import {prompt} from "ui/dialogs";
 import {Router} from '@angular/router';
+import {Page} from 'ui/page';
 import { RouterExtensions } from 'nativescript-angular/router/router-extensions';
 
 @Component({
@@ -17,17 +18,16 @@ export class LoginComponent {
   isLoggingIn = true;
   isAuthenticating = false;
 
-  
   constructor(private firebaseService: FirebaseService,
               private routerExtensions: RouterExtensions,
-              private router: Router
+              private router: Router,
+              private page: Page
             ) {
               this.user = new UserModel();
               this.user.email = "";
-              this.user.password = "";
+              this.user.password = "";                   
             }
 
- 
  submit() {
     this.isAuthenticating = true;
     if (this.isLoggingIn) {
@@ -37,12 +37,11 @@ export class LoginComponent {
     }
   }
 
-  login() {
+  login() {    
      this.firebaseService.login(this.user)
       .then(() => {
         this.isAuthenticating = false;
         this.routerExtensions.navigate(["/"], { clearHistory: true } );
-
       })
       .catch((message:any) => {
         this.isAuthenticating = false;

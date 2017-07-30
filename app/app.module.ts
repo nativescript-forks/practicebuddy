@@ -10,6 +10,7 @@ import { FirebaseService, UtilsService, BackendService } from "./services";
 
 import { LoginModule } from "./login/login.module";
 import { HomeModule } from "./home/home.module";
+
 import { StudentHomeModule } from "./student-home/student-home.module";
 import { StudentHistoryModule } from "./student-history/student-history.module";
 import { StudentAdminModule } from "./student-admin/student-admin.module";
@@ -19,6 +20,10 @@ import { TeacherStudentHomeModule } from "./teacher-student-home/teacher-student
 import { TeacherStudentArchiveModule } from "./teacher-student-archive/teacher-student-archive.module";
 
 import { StickerGalleryModule } from "./sticker-gallery/sticker-gallery.module";
+
+import { registerElement } from "nativescript-angular/element-registry";
+registerElement('ConfettiView', () => require('nativescript-confettiview').ConfettiView);
+
 
 import { uptime, time } from "tns-core-modules/profiling";
 const dialogs = require("ui/dialogs");

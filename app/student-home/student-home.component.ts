@@ -1,4 +1,4 @@
-import { Component, Inject, Injectable, OnInit, OnDestroy, NgZone } from '@angular/core';
+import { Component, Inject, Injectable, OnInit, OnDestroy, NgZone, ViewChild, ElementRef } from '@angular/core';
 import { Http, Headers, RequestOptions } from '@angular/http';
 import { UtilsService, FirebaseService } from '../services';
 
@@ -14,7 +14,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { StudentModel } from '../models/student.model';
 import 'rxjs/add/operator/take';
 import 'rxjs/add/operator/map';
-import "rxjs/Rx";
+//import "rxjs/Rx";
 import { Observable } from "rxjs/Observable";
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
@@ -47,8 +47,10 @@ export class StudentHomeComponent implements OnInit, OnDestroy {
   isRecording: boolean;
   minutes: number = 0;
   seconds: number = 0;
+  confettiseconds: number = 0;
   progress: string;
   myTimer: any;
+  myConfettiTimer: any;
   //for recorder
   myRecordingTimer: any;
   recorderseconds: number = 0;
@@ -57,6 +59,7 @@ export class StudentHomeComponent implements OnInit, OnDestroy {
   message: string;
   status: string;
 
+  
   private isPlaying: Boolean = false;
   private player: any;
   private currentUrl: string;
@@ -70,6 +73,9 @@ export class StudentHomeComponent implements OnInit, OnDestroy {
   public seconds$: BehaviorSubject<number> = new BehaviorSubject(0);
   public reward$: BehaviorSubject<string> = new BehaviorSubject("You're working towards a special prize!");
 
+  //confetti
+  @ViewChild("confetti") confetti: ElementRef;
+
   loader = new LoadingIndicator();
   
   constructor(
@@ -81,10 +87,10 @@ export class StudentHomeComponent implements OnInit, OnDestroy {
   ) {
     this.player = new audio.TNSPlayer();
     this.recorder = new audio.TNSRecorder();
-    this.recorderOptions = this.recorder.AudioRecorderOptions; 
+    this.recorderOptions = this.recorder.AudioRecorderOptions;     
   }
 
-  ngOnInit() {    
+  ngOnInit() { 
       this.sub = this.route.params.subscribe((params: any) => {
         this.id = params['id'];
         this.firebaseService.getMyStudent(this.id).subscribe((student) => {
@@ -238,6 +244,7 @@ deleteStudent(id:string){
 
 
   startTimer() {
+
     //if it's not already timing
     //keep awake
     insomnia.keepAwake().then(function() {});
@@ -267,6 +274,7 @@ deleteStudent(id:string){
                 if(this.practicesrequired == this.practicescompleted){
                   this.status = "done";
                   this.practicescompleted = 0;
+                  this.playConfetti();
                 }
                 let track = appSettings.getString('downloadUrl');
                 this.firebaseService.writePractice(this.id,this.name,this.practicelength, this.teacheremail, track).then((result:any) => {
@@ -283,7 +291,18 @@ deleteStudent(id:string){
       }
     
   }
-
+  //play confetti for 5 seconds
+  playConfetti(){
+    this.myConfettiTimer = timer.setInterval(() => {
+      this.confetti.nativeElement.startConfetti();
+      if (this.confettiseconds < 5 && this.confettiseconds >= 0) {
+        ++this.confettiseconds;
+      }
+      else {
+        this.confetti.nativeElement.stopConfetti();
+      }
+    },1000);
+  }      
   resetTimer() {
     this.isTiming = false;
     this.isPaused = false;
@@ -296,7 +315,7 @@ deleteStudent(id:string){
 
 
   sendEmail(mode) {
-    if (this.teacheremail) {
+    /*if (this.teacheremail) {
       let headers = new Headers(
         {
           "Content-Type": "application/x-www-form-urlencoded",
@@ -322,7 +341,7 @@ deleteStudent(id:string){
         }, error => {
           console.log(error);
         });
-    }
+    }*/
   }
   pauseTimer() {
     this.isTiming = false;
@@ -348,7 +367,7 @@ deleteStudent(id:string){
   testForDone(id: string, status: string) {
     var msg;
     if (this.status == "done") {
-      //reset practicesCompleted, show alert, and send email
+      //reset practicesCompleted, start confetti, show alert, and send email
       msg = "Congratulations! You completed a practice goal!";
       this.sendEmail("goal");
       this.firebaseService.clearPracticesCompleted(id);
@@ -369,6 +388,10 @@ deleteStudent(id:string){
       this.stopRecorder(this.recorderOptions);
       if (this.sub) this.sub.unsubscribe();
       if (this.player) this.player.dispose();
+      //just in case, get rid of confetti
+      if(this.confetti){
+        this.confetti.nativeElement.stopConfetti();
+      }
   }
 
 
