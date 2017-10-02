@@ -44,6 +44,7 @@ export class LoginComponent {
         this.routerExtensions.navigate(["/"], { clearHistory: true } );
       })
       .catch((message:any) => {
+        alert(message);
         this.isAuthenticating = false;
       });
   }
@@ -53,8 +54,7 @@ export class LoginComponent {
       .then((result:any) => {
         this.isAuthenticating = false;
         this.toggleDisplay();
-      })
-      .catch((message:any) => {
+      }).catch((message:any) => {
         alert(message);
         this.isAuthenticating = false;
       });

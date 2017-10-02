@@ -30,7 +30,8 @@
 
 			<Label #practicesrequiredlabel horizontalAlignment="center" class="label" [text]="practicesrequired|number:'2.1-0'"></Label>
 
-			<Slider class="label" #practicesrequiredslider [(ngModel)]="practicesrequired"></Slider>
+			<Slider [value]="practicesrequired"  (valueChange)="onPRSliderChange($event)" #practicesrequiredslider></Slider>
+			
 
 		</StackLayout>
 
@@ -46,7 +47,7 @@
 
 			<Label #practicelengthlabel horizontalAlignment="center" class="label" [text]="practicelength|number:'2.1-0'"></Label>
 
-			<Slider class="label" #practicelengthslider [(ngModel)]="practicelength"></Slider>
+			<Slider [value]="practicelength" (valueChange)="onPLSliderChange($event)" #practicelengthslider></Slider>
 
 		</StackLayout>
 

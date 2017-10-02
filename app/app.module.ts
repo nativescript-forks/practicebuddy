@@ -39,7 +39,8 @@ application.on("displayed", () => {
 
  firebase.init({
    persist: false,
-   storageBucket: 'gs://practicebuddy-4d466.appspot.com',
+   //storageBucket: 'gs://practicebuddy-4d466.appspot.com',
+   storageBucket: 'gs://practicebuddy2.appspot.com',
    onAuthStateChanged: (data: any) => {     
      if (data.loggedIn) {
        BackendService.token = data.user.uid;

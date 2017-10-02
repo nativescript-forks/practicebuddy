@@ -55,7 +55,7 @@ export class HomeComponent implements OnInit {
             inputType: dialogs.inputType.text
         };
         dialogs.prompt(options).then((result: any) => {
-            if (result.text.trim() != "") {
+            if (result.text.trim() != "" && result.result == true) {
                 this.firebaseService.add(result.text)
                     .then(() => {
                         TNSFancyAlert.showSuccess('Success!', 'Student successfully added', 'OK!');

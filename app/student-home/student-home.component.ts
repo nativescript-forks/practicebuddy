@@ -1,6 +1,6 @@
 import { Component, Inject, Injectable, OnInit, OnDestroy, NgZone, ViewChild, ElementRef } from '@angular/core';
 import { Http, Headers, RequestOptions } from '@angular/http';
-import { UtilsService, FirebaseService } from '../services';
+import { UtilsService, FirebaseService, BackendService } from '../services';
 
 import * as timer from 'timer';
 import {TNSFancyAlert,TNSFancyAlertButton} from 'nativescript-fancyalert';
@@ -31,6 +31,7 @@ export class StudentHomeComponent implements OnInit, OnDestroy {
   public editedStudent: StudentModel;
   public myStudent: StudentModel;
   id: any;
+  userId: string;
   private sub: any;
   name: string;
   practicesrequired: number;
@@ -65,9 +66,7 @@ export class StudentHomeComponent implements OnInit, OnDestroy {
   private currentUrl: string;
   private recorder: any;
   private recorderOptions: any;
-  //mail
-  private mailgunUrl: string = "post.ladeezfirstmedia.com";
-  private apiKey: string = "YXBpOmtleS00czhpbjNqY3pjNW1uMDNpYWZmejJmempxYzFjNWI5NQ==";
+  
   //timer
   public minutes$: BehaviorSubject<number> = new BehaviorSubject(0);
   public seconds$: BehaviorSubject<number> = new BehaviorSubject(0);
@@ -91,6 +90,8 @@ export class StudentHomeComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() { 
+    //save off userId, to pass thru
+    this.userId = BackendService.token;
       this.sub = this.route.params.subscribe((params: any) => {
         this.id = params['id'];
         this.firebaseService.getMyStudent(this.id).subscribe((student) => {
@@ -277,8 +278,8 @@ deleteStudent(id:string){
                   this.playConfetti();
                 }
                 let track = appSettings.getString('downloadUrl');
-                this.firebaseService.writePractice(this.id,this.name,this.practicelength, this.teacheremail, track).then((result:any) => {
-                  appSettings.setString('practiceId',result.key)
+                this.firebaseService.writePractice(this.userId,this.id,this.name,this.practicelength, this.teacheremail, track).then((result:any) => {
+                  //appSettings.setString('practiceId',result.key)
                     this.testForDone(this.id, this.status);
                   }, (error: any) => {
                     alert(error);
@@ -370,7 +371,7 @@ deleteStudent(id:string){
       //reset practicesCompleted, start confetti, show alert, and send email
       msg = "Congratulations! You completed a practice goal!";
       this.sendEmail("goal");
-      this.firebaseService.clearPracticesCompleted(id);
+      this.firebaseService.clearPracticesCompleted(this.userId,id);
     }
     else {
       msg = "Congratulations! You completed a practice session!";
@@ -378,7 +379,7 @@ deleteStudent(id:string){
         this.sendEmail("session");                     
       }
       //increment practices completed
-      this.firebaseService.incrementPracticesCompleted(this.id, this.practicescompleted);
+      this.firebaseService.incrementPracticesCompleted(this.userId, this.id, this.practicescompleted);
     }
     TNSFancyAlert.showSuccess('Success!', msg, 'OK!');
   }

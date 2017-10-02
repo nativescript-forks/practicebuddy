@@ -7,21 +7,21 @@
 	<key>AD_UNIT_ID_FOR_INTERSTITIAL_TEST</key>
 	<string>ca-app-pub-3940256099942544/4411468910</string>
 	<key>CLIENT_ID</key>
-	<string>858571045381-h8amo4dr0tm72at67rmccpa6tk9ss3ag.apps.googleusercontent.com</string>
+	<string>383967997605-3l3hsrbvlvqs9poqnpeupv3ull50cvlq.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.858571045381-h8amo4dr0tm72at67rmccpa6tk9ss3ag</string>
+	<string>com.googleusercontent.apps.383967997605-3l3hsrbvlvqs9poqnpeupv3ull50cvlq</string>
 	<key>API_KEY</key>
-	<string>AIzaSyC3Jm50U3nDyKa-0u0_j4wcdD3hhR41iHs</string>
+	<string>AIzaSyACEoV65flBCCBGz4byViHfr9Hkrn2q5Mw</string>
 	<key>GCM_SENDER_ID</key>
-	<string>858571045381</string>
+	<string>383967997605</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.ladeezfirstmedia.practicebuddy</string>
 	<key>PROJECT_ID</key>
-	<string>practicebuddy-4d466</string>
+	<string>practicebuddy2</string>
 	<key>STORAGE_BUCKET</key>
-	<string>practicebuddy-4d466.appspot.com</string>
+	<string>practicebuddy2.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<true/>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -33,8 +33,8 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true/>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:858571045381:ios:eaaa9fd82456da29</string>
+	<string>1:383967997605:ios:eaaa9fd82456da29</string>
 	<key>DATABASE_URL</key>
-	<string>https://practicebuddy-4d466.firebaseio.com</string>
+	<string>https://practicebuddy2.firebaseio.com</string>
 </dict>
 </plist>

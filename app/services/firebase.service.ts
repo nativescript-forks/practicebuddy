@@ -34,12 +34,22 @@ export class FirebaseService {
     return firebase.createUser({
       email: user.email,
       password: user.password
-    }).then(
-      function (result: any) {
-        return JSON.stringify(result);
-      },
-      function (errorMessage: any) {
-        alert(errorMessage);
+    }).then((result: any) => {
+      //create a collection with an email and date. This can be the teacher's email
+      return firebase.update(
+        "/Users/"+BackendService.token,
+        {
+          "Email": user.email,
+          "Date": 0 - Date.now()
+        }
+      ).then(
+        function (result: any) {
+          console.log(result)
+          return 'User added!';
+        },
+        function (errorMessage: any) {
+          console.log(errorMessage);
+        });
       })
   }
 
@@ -58,7 +68,7 @@ export class FirebaseService {
       return JSON.stringify(result);
     }, (errorMessage: any) => {
       this.loader.hide();
-      alert(errorMessage);
+      alert(JSON.stringify(errorMessage));
     });
   }
 
@@ -74,7 +84,7 @@ export class FirebaseService {
       return 'Please check your email for the password reset instructions';
     },
       function (errorMessage: any) {
-        alert(errorMessage);
+        alert(JSON.stringify(errorMessage));
       }
       ).catch(this.handleErrors);
   }
@@ -85,7 +95,8 @@ export class FirebaseService {
 
     //this gets the students associated to the account
     return new Observable((observer: any) => {
-      let path = 'StudentSettings';
+      let path = 'Users/'+BackendService.token;
+      console.log(path)
       let listener: any;
 
       this.loader.show({ message: 'Finding my Students...' });
@@ -94,18 +105,19 @@ export class FirebaseService {
         this.ngZone.run(() => {
           let results = this.handleSnapshot(snapshot.value);
           observer.next(results);
-          //this.loader.hide();
+          this.loader.hide();
         });
       };
 
       firebase.addValueEventListener(onValueEvent, `/${path}`);
     }).share();
   }
-
+  
   public add(name: string) {
     return firebase.push(
-      "/StudentSettings",
+      "/Users/"+BackendService.token+"",
       {
+        "Email": BackendService.email,
         "Name": name,
         "Date": 0 - Date.now(),
         "PracticesRequired": 5,
@@ -113,18 +125,17 @@ export class FirebaseService {
         "PracticeLength": 20,
         "Reward": "A special prize!",
         "AdminPassword": "",
+        "TeacherId": "",
         "TeacherEmail": "",
         "Instrument": 10,
-        "NotifyAll": false,
-        "UID": BackendService.token
+        "NotifyAll": false
       }
     ).then(
       function (result: any) {
-        console.log(result)
         return 'Student added!';
       },
       function (errorMessage: any) {
-        console.log(errorMessage);
+        console.log(JSON.stringify(errorMessage));
       });
   }
 
@@ -147,7 +158,7 @@ export class FirebaseService {
   }
 
   public deleteStudent(id: string) {
-    return firebase.remove("/StudentSettings/" + id + "")
+    return firebase.remove("/Users/"+BackendService.token+"/"+id+"")
       .then(
       //this.publishUpdates()
       )
@@ -156,7 +167,7 @@ export class FirebaseService {
 
   public addPracticeTrack(id: string, track: string) {
     this.publishUpdates();
-    return firebase.update("/Practices/" + id + "", { Track: track })
+    return firebase.update("/Practices/"+id+"", { Track: track })
       .then(
       function (result: any) {
         return 'Practice track added!';
@@ -179,9 +190,16 @@ export class FirebaseService {
       });
   }
 
-  public writePractice(id: string, name: string, practicelength: number, teacheremail: string, track: string) {
+  public writePractice(userId: string, id: string, name: string, practicelength: number, teacheremail: string, track: string) {
+    console.log("token is",userId)
     this.publishUpdates();
-    return firebase.push("/Practices/", { StudentId: id, Name: name, Date: firebase.ServerValue.TIMESTAMP, PracticeLength: practicelength, TeacherEmail: teacheremail, Track: track })
+    return firebase.push("/Practices/"+userId, { StudentId: id, Name: name, Date: firebase.ServerValue.TIMESTAMP, PracticeLength: practicelength, TeacherEmail: teacheremail, Track: track })
+      .then(
+        function(result: any){
+          console.log(JSON.stringify(result.key))
+          return firebase.push("/Users/"+userId+"/" + id + "/Practices/",{PracticeId: result.key})
+        }
+      )
       .then(
       function (result: any) {
         return result;
@@ -190,10 +208,10 @@ export class FirebaseService {
         console.log(errorMessage);
       });
   }
-  public clearPracticesCompleted(id: string) {
+  public clearPracticesCompleted(userId: string, id: string) {
     //sets practices to zero
     this.publishUpdates();
-    return firebase.update("/StudentSettings/" + id + "", { PracticesCompleted: 0 })
+    return firebase.update("/Users/" + userId + "/" + id + "", { PracticesCompleted: 0 })
       .then(
       function (result: any) {
         return 'Congratulations! You completed a practice goal!';
@@ -203,9 +221,9 @@ export class FirebaseService {
       });
   }
 
-  public incrementPracticesCompleted(id: string, currPracticesCompleted: number) {
+  public incrementPracticesCompleted(userId: string, id: string, currPracticesCompleted: number) {
     this.publishUpdates();
-    return firebase.update("/StudentSettings/" + id + "", { PracticesCompleted: currPracticesCompleted })
+    return firebase.update("/Users/" + userId + "/" + id + "",  { PracticesCompleted: currPracticesCompleted })
       .then(
       function (result: any) {
         return 'Student information saved!';
@@ -228,7 +246,7 @@ export class FirebaseService {
         this.ngZone.run(() => {
           let results = this.handleTeacherStudentsSnapshot(snapshot.value);
           observer.next(results);
-          //this.loader.hide();
+          this.loader.hide();
         });
       };
       firebase.addValueEventListener(onValueEvent, `/${path}`).then(() => {
@@ -238,10 +256,11 @@ export class FirebaseService {
   }
 
   //teacher student home
-  public getMyPractices(id:string): Observable<any> {
+  public getMyPractices(userId: string,id:string): Observable<any> {
     //this gets the practices associated to a student
     return new Observable((observer: any) => {
-      let path = 'Practices';
+      let path = 'Practices/'+userId;
+      console.log(path)
       let listener: any;          
         this.loader.show({ message: 'Finding Practices...' });
           
@@ -285,14 +304,59 @@ export class FirebaseService {
   //settings 
   public saveSettings(student: StudentModel){
     this.publishUpdates();
-    return firebase.update("/StudentSettings/"+student.id+"",{Name:student.Name, Instrument:student.Instrument, AdminPassword:student.AdminPassword, PracticesRequired:student.PracticesRequired, PracticeLength:student.PracticeLength, Reward:student.Reward, TeacherEmail:student.TeacherEmail, NotifyAll:student.NotifyAll})
+    this.lookUpTeacher(student.TeacherEmail,student.id);
+    return firebase.update("/Users/"+BackendService.token+"/"+student.id+"",{Name:student.Name, Instrument:student.Instrument, AdminPassword:student.AdminPassword, PracticesRequired:student.PracticesRequired, PracticeLength:student.PracticeLength, Reward:student.Reward, TeacherEmail:student.TeacherEmail, NotifyAll:student.NotifyAll})
       .then(
         function (result:any) {
-          return 'Student information saved!';
+          return 'Student information saved!';          
         },
         function (errorMessage:any) {
           console.log(errorMessage);
         });  
+  }
+
+  lookUpTeacher(email,studentId){
+    var onQueryEvent = function(result) {
+      if (!result.error) {
+        for (let id in result.value) {
+          // Get the object based on the id 
+          console.log(id)
+          //update student with teacher id
+          return firebase.update(
+            "/Users/"+BackendService.token+"/"+studentId,
+            {
+              "TeacherId": id,
+            }
+          ).then(
+            function (result: any) {
+              console.log(result)
+              return 'User added!';
+            },
+            function (errorMessage: any) {
+              console.log(errorMessage);
+            });
+          
+         
+      }
+          
+      }
+  };
+
+  firebase.query(
+      onQueryEvent,
+      "/Users",
+      {
+        singleEvent: true,
+        orderBy: {
+          type: firebase.QueryOrderByType.CHILD,
+          value: 'Email'
+        },
+        range: {
+          type: firebase.QueryRangeType.EQUAL_TO,
+          value: email
+        }         
+      }
+  );
   }
 
    //stickers
@@ -338,7 +402,8 @@ export class FirebaseService {
     if (data) {
       for (let id in data) {
         let result = (<any>Object).assign({ id: id }, data[id]);
-        if (BackendService.token === result.UID) {
+        //only display if there is a name for this student
+        if (result.Name) {
           this._allItems.push(result);
         }
       }
@@ -361,7 +426,7 @@ export class FirebaseService {
     return this._allTeacherStudentsItems;
   }
 
-  handlePracticeSnapshot(studentId: string, data: any, path?: string) {
+  handlePracticeSnapshot(studentId: string,data: any, path?: string) {
     this._allPracticeItems = [];
     if (path)
     if (data) {

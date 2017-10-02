@@ -3,7 +3,7 @@ import * as audio from 'nativescript-audio';
 import {TNSFancyAlert,TNSFancyAlertButton} from 'nativescript-fancyalert';
 import {Observable} from 'rxjs/Observable';
 import {Router, ActivatedRoute} from '@angular/router';
-import {FirebaseService} from '../services';
+import {FirebaseService, BackendService} from '../services';
 import {StudentModel, PracticeModel} from '../models';
 
 @Component({
@@ -22,6 +22,7 @@ export class TeacherStudentHomeComponent implements OnInit {
   public isPlaying: boolean;
   public player: any;
   private currentUrl: string;
+  userId: string;
 
 
   constructor(private route: ActivatedRoute,
@@ -34,11 +35,11 @@ export class TeacherStudentHomeComponent implements OnInit {
 
  ngOnInit() {
    //get the student's base info and the specific practice we are showign
- 
+  this.userId = BackendService.token;
   this.name = this.route.snapshot.queryParams['name']
   this.sub = this.route.params.subscribe((params:any) => {
       this.id = params['id'];
-      this.studentpractices$ = <any>this.firebaseService.getMyPractices(this.id);
+      this.studentpractices$ = <any>this.firebaseService.getMyPractices(this.userId,this.id);
     });
   }
 

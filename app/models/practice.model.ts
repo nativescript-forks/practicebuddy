@@ -8,7 +8,8 @@ export class PracticeModel {
         public Comment: string,
         public Archive: boolean,
         public Track: string,
-        public TeacherEmail: string,
+        public TeacherId: string,
+        public TeacherAdmin: string,
         public StudentId: string
       )
       {}   

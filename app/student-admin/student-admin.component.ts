@@ -1,7 +1,7 @@
 import { Component, Inject, NgZone, OnInit, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
 import { RouterExtensions } from 'nativescript-angular/router/router-extensions';
 import {TNSFancyAlert,TNSFancyAlertButton} from 'nativescript-fancyalert';
-
+import { Slider } from "ui/slider";
 import { Observable } from 'rxjs/Observable';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FirebaseService, BackendService } from '../services';
@@ -23,6 +23,8 @@ export class StudentAdminComponent implements OnInit, AfterViewInit {
   reward: string;
   adminpassword: string;
   teacheremail: string;
+  email: string;
+  teacherId: string;
   date: string;
   instrument: number = 10;
   instruments: any;
@@ -104,7 +106,6 @@ export class StudentAdminComponent implements OnInit, AfterViewInit {
   }
 
   public selectedSwitchChanged(result) {
-    console.log(result)
     if (result) {
       this.selectedSwitchIndex = true;
     } else {
@@ -112,7 +113,15 @@ export class StudentAdminComponent implements OnInit, AfterViewInit {
     }
   }
 
+  public onPRSliderChange(args) {
+    let slider = <Slider>args.object;
+    this.practicesrequired = slider.value;
+  }
 
+  public onPLSliderChange(args) {
+    let slider = <Slider>args.object;
+    this.practicelength = slider.value;
+  }
 
   testForPassword() {
     if (this.adminpassword) {
@@ -148,6 +157,7 @@ export class StudentAdminComponent implements OnInit, AfterViewInit {
   submit() {
     this.newstudent = new StudentModel(
       this.id,
+      this.email,
       this.adminpassword,
       this.date,
       this.selectedInstrumentIndex,
@@ -156,7 +166,8 @@ export class StudentAdminComponent implements OnInit, AfterViewInit {
       this.practicescompleted,
       Math.round(this.practicesrequired),
       this.reward,
-      this.teacheremail,
+      this.teacherId,
+      this.teacheremail,      
       this.selectedSwitchIndex)
 
     //validation
@@ -168,7 +179,7 @@ export class StudentAdminComponent implements OnInit, AfterViewInit {
         TNSFancyAlert.showError('Oops!', 'Please enter values in the required fields', 'OK!');
     }
   
-  else if(this.newstudent.NotifyAll == true && this.newstudent.TeacherEmail == ""){
+  else if(this.newstudent.NotifyAll == true && this.newstudent.TeacherId == ""){
         TNSFancyAlert.showError('Oops!', 'If you want your teacher to receive emails, please enter their email address', 'OK!');
   }
 
@@ -176,7 +187,7 @@ export class StudentAdminComponent implements OnInit, AfterViewInit {
      this.firebaseService.saveSettings(this.newstudent)
       .then(() => {
         TNSFancyAlert.showSuccess('Saved!', 'Student info saved!', 'OK!');
-        this._router.navigate([""]);
+        this._router.navigate(["/"]);
       })
       .catch(function (e: any) {
         console.log(e.message);

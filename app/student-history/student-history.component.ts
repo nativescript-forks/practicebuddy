@@ -16,6 +16,7 @@ export class StudentHistoryComponent implements OnInit {
     public practices$: Observable<any>;
     id: any;
     private sub: any;
+    userId: string;
   
     
     constructor(
@@ -28,7 +29,8 @@ export class StudentHistoryComponent implements OnInit {
 ngOnInit(){
   this.sub = this.route.params.subscribe((params:any) => {
       this.id = params['id'];
-      this.practices$ = <any>this.firebaseService.getMyPractices(this.id);
+      this.userId = BackendService.token;
+      this.practices$ = <any>this.firebaseService.getMyPractices(this.userId,this.id);
     });
  }
 
