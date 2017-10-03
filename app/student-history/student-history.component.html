@@ -5,17 +5,25 @@
 </ActionBar>
 
 <ScrollView>
+  <StackLayout>
+  <GridLayout class="list-header" columns="1*,1*,1*,1*" rows="*">
+    <Label col="0" text="Date"></Label>
+    <Label col="1" text="Length"></Label>
+    <Label col="2" text="Comment"></Label>
+    <Label textWrap="true" col="3" text="Sticker"></Label>
+  </GridLayout>
   <ListView [items]="practices$ | async" class="list">
     <ng-template let-item="item">  
         <StackLayout orientation="horizontal" class="line-item">
           <GridLayout columns="1*,1*,1*,1*" rows="*">
-            <Button col="0" height="40" width="40" *ngIf="item.Comment" [text]="'fa-pencil' | fonticon" class="fa historyBtn orange" (tap)="viewComment(item.Comment)"></Button>
-            <Label col="1" class="line-item-text" [text]='item.Date | date:"shortDate"'></Label>
-            <Label col="2" [text]="' '+item.PracticeLength+' minutes'"></Label>
-            <Image col="3" width="50" *ngIf="item.Sticker" [src]="'~/images/stickers/sticker'+item.Sticker+'.png'"></Image>           
+            <Label class="list-item" col="0" [text]='item.Date | date:"shortDate"'></Label>
+            <Label class="list-item" col="1" [text]="' '+item.PracticeLength+' minutes'"></Label>
+            <Button col="2" height="40" width="40" *ngIf="item.Comment" [text]="'fa-pencil' | fonticon" class="fa historyBtn orange" (tap)="viewComment(item.Comment)"></Button>
+            <Image class="list-item" col="3" width="50" *ngIf="item.Sticker" [src]="'~/images/stickers/sticker'+item.Sticker+'.png'"></Image>           
           </GridLayout>
         </StackLayout>    
     </ng-template>
   </ListView>
+  </StackLayout>
 </ScrollView>
 

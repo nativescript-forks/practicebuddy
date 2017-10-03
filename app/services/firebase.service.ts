@@ -10,6 +10,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import 'rxjs/add/operator/share';
 import 'rxjs/add/operator/find';
 import { UserModel, StudentModel, PracticeModel } from '../models';
+import {TNSFancyAlert,TNSFancyAlertButton} from 'nativescript-fancyalert';
 
 @Injectable()
 export class FirebaseService {
@@ -68,7 +69,7 @@ export class FirebaseService {
       return JSON.stringify(result);
     }, (errorMessage: any) => {
       this.loader.hide();
-      alert(JSON.stringify(errorMessage));
+      TNSFancyAlert.showError('Oops!', JSON.stringify(errorMessage), 'OK!');      
     });
   }
 
@@ -84,7 +85,7 @@ export class FirebaseService {
       return 'Please check your email for the password reset instructions';
     },
       function (errorMessage: any) {
-        alert(JSON.stringify(errorMessage));
+        TNSFancyAlert.showError('Oops!', JSON.stringify(errorMessage), 'OK!');              
       }
       ).catch(this.handleErrors);
   }
@@ -167,7 +168,7 @@ export class FirebaseService {
 
   public addPracticeTrack(id: string, track: string) {
     this.publishUpdates();
-    return firebase.update("/Practices/"+BackendService.token+"/"+id+"", { Track: track })
+    return firebase.update("/Practices/"+id+"", { Track: track })
       .then(
       function (result: any) {
         return 'Practice track added!';
@@ -190,17 +191,16 @@ export class FirebaseService {
       });
   }
 
-  public writePractice(userId: string, id: string, name: string, practicelength: number, teacheremail: string, track: string) {
-    console.log("token is",userId)
-    console.log(track)
+  public writePractice(id: string, name: string, practicelength: number, track: string) {
     this.publishUpdates();
-    return firebase.push("/Practices/"+userId, { StudentId: id, Name: name, Date: firebase.ServerValue.TIMESTAMP, PracticeLength: practicelength, TeacherEmail: teacheremail, Track: track })
+    return firebase.push("/Practices/"+id, { Name: name, Date: firebase.ServerValue.TIMESTAMP, PracticeLength: practicelength, Track: track })
+      /*
+      //keep a reference of the student's practices under the person who practiced
       .then(
         function(result: any){
-          console.log(JSON.stringify(result.key))
           return firebase.push("/Users/"+userId+"/" + id + "/Practices/",{PracticeId: result.key})
         }
-      )
+      )*/
       .then(
       function (result: any) {
         return result;
@@ -260,15 +260,17 @@ export class FirebaseService {
   public getMyPractices(id:string): Observable<any> {
     //this gets the practices associated to a student
     return new Observable((observer: any) => {
-      let path = 'Practices/'+BackendService.token;
+      let path = '/Practices/'+id+"";
       console.log(path)
       let listener: any;          
         this.loader.show({ message: 'Finding Practices...' });
-          
+
         let onValueEvent = (snapshot: any) => {
           this.ngZone.run(() => {
-            let results = this.handlePracticeSnapshot(id,snapshot.value, path);
-             observer.next(results);
+            
+              let results = this.handlePracticeSnapshot(snapshot.value, path);
+              observer.next(results);
+            
           });
         };
 
@@ -424,18 +426,21 @@ export class FirebaseService {
     return this._allTeacherStudentsItems;
   }
 
-  handlePracticeSnapshot(studentId: string,data: any, path?: string) {
+  handlePracticeSnapshot(data: any, path?: string) {
     this._allPracticeItems = [];
     if (path)
     if (data) {
       for (let id in data) {
-        let result = (<any>Object).assign({id: id}, data[id]);
-        if(studentId === result.StudentId){
-          this._allPracticeItems.push(result);
-        }
+        let result = (<any>Object).assign({id: id}, data[id]);        
+          this._allPracticeItems.push(result);    
         
       }
       this.publishPracticeUpdates();
+    }
+    else {
+      this.loader.hide();
+      TNSFancyAlert.showError('Oops!', 'Looks like there are no practices recorded yet!', 'OK!');      
+      
     }
     return this._allPracticeItems;
   }
@@ -452,6 +457,10 @@ export class FirebaseService {
         }
       }
       this.publishPracticeArchiveUpdates();
+    }
+    else {
+      this.loader.hide();
+      TNSFancyAlert.showError('Oops!', 'Looks like there are no practices recorded yet!', 'OK!');      
     }
     return this._allPracticeArchiveItems;
   }

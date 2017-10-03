@@ -30,7 +30,7 @@
 
 			<Label #practicesrequiredlabel horizontalAlignment="center" class="label" [text]="practicesrequired|number:'2.1-0'"></Label>
 
-			<Slider [value]="practicesrequired"  (valueChange)="onPRSliderChange($event)" #practicesrequiredslider></Slider>
+			<Slider minValue="1" [value]="practicesrequired"  (valueChange)="onPRSliderChange($event)" #practicesrequiredslider></Slider>
 			
 
 		</StackLayout>
@@ -47,7 +47,7 @@
 
 			<Label #practicelengthlabel horizontalAlignment="center" class="label" [text]="practicelength|number:'2.1-0'"></Label>
 
-			<Slider [value]="practicelength" (valueChange)="onPLSliderChange($event)" #practicelengthslider></Slider>
+			<Slider [value]="practicelength" minValue="2" (valueChange)="onPLSliderChange($event)" #practicelengthslider></Slider>
 
 		</StackLayout>
 

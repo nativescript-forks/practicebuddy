@@ -283,7 +283,7 @@ deleteStudent(id:string){
                   this.playConfetti();
                 }
                 let track = appSettings.getString('downloadUrl');
-                this.firebaseService.writePractice(this.userId,this.id,this.name,this.practicelength, this.teacheremail, track).then((result:any) => {
+                this.firebaseService.writePractice(this.id,this.name,this.practicelength, track).then((result:any) => {
                   //appSettings.setString('practiceId',result.key)
                     this.testForDone(this.id, this.status);
                   }, (error: any) => {

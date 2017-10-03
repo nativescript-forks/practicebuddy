@@ -90,8 +90,15 @@ TextField {
   margin-top: 5;
   border-radius:2;
 }
-.list {
-  margin-top: 25;
+.list-header{
+  background-color: #10B671;
+  color: white;
+  font-size: 15;
+  font-weight: bold;
+  padding: 5;
+}
+.list-item{
+  text-align: left;
 }
 
 .instrumentBackground {
