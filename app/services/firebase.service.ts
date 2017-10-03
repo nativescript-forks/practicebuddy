@@ -95,7 +95,7 @@ export class FirebaseService {
 
     //this gets the students associated to the account
     return new Observable((observer: any) => {
-      let path = 'Users/'+BackendService.token;
+      let path = '/Users/'+BackendService.token;
       console.log(path)
       let listener: any;
 
@@ -167,7 +167,7 @@ export class FirebaseService {
 
   public addPracticeTrack(id: string, track: string) {
     this.publishUpdates();
-    return firebase.update("/Practices/"+id+"", { Track: track })
+    return firebase.update("/Practices/"+BackendService.token+"/"+id+"", { Track: track })
       .then(
       function (result: any) {
         return 'Practice track added!';

@@ -217,22 +217,22 @@ deleteStudent(id:string){
         console.log(options.filename);
         this.firebaseService.saveRecording(options.filename).then((uploadedFile: any) => {
           this.loader.hide();          
-          let practiceId = appSettings.getString('practiceId');
+          //let practiceId = appSettings.getString('practiceId');
           let track = uploadedFile.name;
                 this.firebaseService.getDownloadUrl(track).then((downloadUrl: string) => {
                   //if there is a practice already logged, edit the record
-                  if(practiceId!=null){
+                  /*if(practiceId!=null){
                   this.firebaseService.addPracticeTrack(practiceId,downloadUrl).then((result:any) => {
-                    console.log("practice written")
+                    console.log(practiceId,downloadUrl)
                       }, 
                       (error: any) => {
                         alert(error);
                   });
-                  } 
+                  } */
                   //otherwise, save the downloadpath
-                  else {
+                  //else {
                     appSettings.setString('downloadUrl',downloadUrl)
-                  }              
+                  //}              
                 })   
         }, (error: any) => {
           this.loader.hide();
