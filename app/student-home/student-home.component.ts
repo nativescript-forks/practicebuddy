@@ -132,7 +132,10 @@ export class StudentHomeComponent implements OnInit, OnDestroy {
   }
 
   goToHistory(id:string) {
-    this.router.navigate(["/student-history", id]);
+    let navigationExtras = {
+      queryParams: { 'userId': BackendService.token }
+    }
+    this.router.navigate(["/student-history", id], navigationExtras);
 }
 
 editStudent(id:string){
@@ -249,8 +252,10 @@ deleteStudent(id:string){
     //if it's not already timing
     //keep awake
     insomnia.keepAwake().then(function() {});
-    //clear appsettings
-     appSettings.clear();
+    //clear appsettings    
+    appSettings.setString('practiceId','')
+    appSettings.setString('downloadUrl','')
+
     if (!this.isTiming) {
         this.isTiming = true;
         this.myTimer = timer.setInterval(() => {

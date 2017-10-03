@@ -2,11 +2,11 @@ import { Injectable, Inject, NgZone } from '@angular/core';
 import firebase = require("nativescript-plugin-firebase");
 import { LoadingIndicator } from "nativescript-loading-indicator";
 import * as appSettings from 'application-settings';
-import { RouterExtensions } from 'nativescript-angular/router';
+//import { RouterExtensions } from 'nativescript-angular/router';
 import { UtilsService, BackendService } from '../services';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Router, ActivatedRoute } from '@angular/router';
+//import { Router, ActivatedRoute } from '@angular/router';
 import 'rxjs/add/operator/share';
 import 'rxjs/add/operator/find';
 import { UserModel, StudentModel, PracticeModel } from '../models';
@@ -192,6 +192,7 @@ export class FirebaseService {
 
   public writePractice(userId: string, id: string, name: string, practicelength: number, teacheremail: string, track: string) {
     console.log("token is",userId)
+    console.log(track)
     this.publishUpdates();
     return firebase.push("/Practices/"+userId, { StudentId: id, Name: name, Date: firebase.ServerValue.TIMESTAMP, PracticeLength: practicelength, TeacherEmail: teacheremail, Track: track })
       .then(
@@ -256,10 +257,10 @@ export class FirebaseService {
   }
 
   //teacher student home
-  public getMyPractices(userId: string,id:string): Observable<any> {
+  public getMyPractices(id:string): Observable<any> {
     //this gets the practices associated to a student
     return new Observable((observer: any) => {
-      let path = 'Practices/'+userId;
+      let path = 'Practices/'+BackendService.token;
       console.log(path)
       let listener: any;          
         this.loader.show({ message: 'Finding Practices...' });
@@ -335,10 +336,7 @@ export class FirebaseService {
             function (errorMessage: any) {
               console.log(errorMessage);
             });
-          
-         
-      }
-          
+          }          
       }
   };
 

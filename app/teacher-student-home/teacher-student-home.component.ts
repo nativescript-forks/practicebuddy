@@ -39,7 +39,7 @@ export class TeacherStudentHomeComponent implements OnInit {
   this.name = this.route.snapshot.queryParams['name']
   this.sub = this.route.params.subscribe((params:any) => {
       this.id = params['id'];
-      this.studentpractices$ = <any>this.firebaseService.getMyPractices(this.userId,this.id);
+      this.studentpractices$ = <any>this.firebaseService.getMyPractices(this.id);
     });
   }
 

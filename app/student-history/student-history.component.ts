@@ -14,7 +14,7 @@ import {StudentModel} from '../models';
 export class StudentHistoryComponent implements OnInit {
 
     public practices$: Observable<any>;
-    id: any;
+    studentId: any;
     private sub: any;
     userId: string;
   
@@ -26,11 +26,13 @@ export class StudentHistoryComponent implements OnInit {
         private ngZone: NgZone,
     ) {}
 
-ngOnInit(){
+ngOnInit(){             
   this.sub = this.route.params.subscribe((params:any) => {
-      this.id = params['id'];
-      this.userId = BackendService.token;
-      this.practices$ = <any>this.firebaseService.getMyPractices(this.userId,this.id);
+      this.studentId = params['id'];
+      this.userId = params['userId']
+      this.ngZone.run(() => {
+        this.practices$ = <any>this.firebaseService.getMyPractices(this.studentId);
+      })      
     });
  }
 
